@@ -2,7 +2,7 @@ package com.example.orderservice.service;
 
 import com.example.orderservice.dto.OrderRequest;
 import com.example.orderservice.model.Item;
-import com.example.orderservice.model.ItemDto;
+import com.example.orderservice.dto.ItemDto;
 import com.example.orderservice.model.Order;
 import com.example.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;

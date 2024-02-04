@@ -1,4 +1,4 @@
-package com.example.orderservice.model;
+package com.example.orderservice.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,5 @@
 package com.example.orderservice.dto;
 
-import com.example.orderservice.model.ItemDto;
 import lombok.Builder;
 import lombok.Data;
 
