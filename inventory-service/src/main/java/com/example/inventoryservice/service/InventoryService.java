@@ -15,7 +15,7 @@ public class InventoryService {
 
     @Transactional(readOnly = true)
     public boolean isInStock(String productName) {
-        return inventoryRepository.findByName(productName).isPresent();
+        return inventoryRepository.findByProductName(productName).isPresent();
     }
 
     @Transactional
