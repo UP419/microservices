@@ -1,20 +1,20 @@
 package com.example.Product.Service;
 
 import com.example.Product.Service.dto.ProductRequest;
+import com.example.Product.Service.model.Product;
 import com.example.Product.Service.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,21 +23,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 @AutoConfigureMockMvc
 class ProductServiceApplicationTests {
-    @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.2");
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
-    @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry dynamicPropertyRegistry) {
-        dynamicPropertyRegistry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl());
+    @Autowired
+    private static Environment env;
+
+    @BeforeAll
+    public static void init() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUrl("jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE");
+        dataSource.setUsername("sa");
+        dataSource.setPassword("saPSWD419");
     }
 
     @Test
@@ -52,6 +57,20 @@ class ProductServiceApplicationTests {
         int sizeAfter = productRepository.findAll().size();
         Assertions.assertEquals(sizeAfter, sizeBefore + 1);
     }
+
+    @Test
+    void saveProductTest2() {
+        int sizeBefore = productRepository.findAll().size();
+        Product product = Product.builder()
+                .name("Iphone")
+                .price(1500.0)
+                .description("phone")
+                .build();
+        productRepository.save(product);
+        int sizeAfter = productRepository.findAll().size();
+        Assertions.assertEquals(sizeAfter, sizeBefore + 1);
+    }
+
 
     @Test
     void exceptionTest() throws Exception {
