@@ -4,12 +4,14 @@ import com.example.Product.Service.dto.ProductRequest;
 import com.example.Product.Service.model.Product;
 import com.example.Product.Service.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
+@PropertySource("classpath:application-test.properties")
 class ProductServiceApplicationTests {
 
     @Autowired
@@ -36,13 +39,25 @@ class ProductServiceApplicationTests {
     @Autowired
     private static Environment env;
 
-    @BeforeAll
-    public static void init() {
+    @Value("${jdbc.driverClassName}")
+    private String driverClassName;
+
+    @Value("jdbc.url")
+    private String jdbcUrl;
+
+    @Value("jdbc.username")
+    private String username;
+
+    @Value("jdbc.password")
+    private String password;
+
+    @PostConstruct
+    public void init() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("saPSWD419");
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(jdbcUrl);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
     }
 
     @Test
