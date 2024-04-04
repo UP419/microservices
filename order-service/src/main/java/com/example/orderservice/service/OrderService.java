@@ -20,7 +20,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     @Transactional
     public void placeOrder(OrderRequest orderRequest) {
@@ -32,8 +32,8 @@ public class OrderService {
 
         List<String> productNames = itemList.stream().map(item -> item.getProductName()).toList();
 
-        List<InventoryResponse> productsInStock = webClient.get()
-                .uri("http://localhost:8082/api/inventory"
+        List<InventoryResponse> productsInStock = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory"
                         , uriBuilder -> uriBuilder.queryParam("productNames", productNames).build())
                 .retrieve().
                 bodyToFlux(InventoryResponse.class).
