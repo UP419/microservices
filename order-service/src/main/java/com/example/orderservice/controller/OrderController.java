@@ -20,4 +20,9 @@ public class OrderController {
         return "Your order has been placed";
     }
 
+    @GetMapping("/hello")
+    public String getSomething(){
+        return "Hello World";
+    }
+
 }
