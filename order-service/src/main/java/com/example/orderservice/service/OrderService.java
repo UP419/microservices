@@ -23,7 +23,7 @@ public class OrderService {
     private final WebClient.Builder webClientBuilder;
 
     @Transactional
-    public void placeOrder(OrderRequest orderRequest) {
+    public String placeOrder(OrderRequest orderRequest) {
         List<Item> itemList = orderRequest.getOrderItemsList().stream().map(this::getItem).toList();
         Order order = Order.builder()
                 .orderNumber(UUID.randomUUID().toString())
@@ -49,6 +49,7 @@ public class OrderService {
 
         if (everyProductInStock) {
             orderRepository.save(order);
+            return "Your order has been placed";
         } else {
             throw new IllegalArgumentException("Product is out of stock");
         }
