@@ -19,6 +19,10 @@ public class InventoryController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<InventoryResponse> isInStock(@RequestParam List<String> productNames) {
+        productNames.add("macBook");
+        productNames.add("macbook");
+        productNames.add("MacBook");
+        productNames.add("Macbook");
         return inventoryService.isInStock(productNames);
     }
 
