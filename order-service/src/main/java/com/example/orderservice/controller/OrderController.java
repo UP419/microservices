@@ -25,7 +25,7 @@ public class OrderController {
     @Retry(name = "inventory")
     public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) {
         //placeorder method will run in different thread and if timeout is reached it will throw a timeout exception
-        return CompletableFuture.supplyAsync(() -> orderService.placeOrder(orderRequest);
+        return CompletableFuture.supplyAsync(() -> orderService.placeOrder(orderRequest));
     }
 
     public CompletableFuture<String> fallbackMethod(OrderRequest orderRequest, RuntimeException runtimeException) {
